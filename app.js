@@ -17,7 +17,7 @@ app.use("/api", routes);
 
 app.use(function (err, req, res, next) {
     if (err.name === 'UnauthorizedError') {
-        response.errorResponse(res,"You must logging",401)
+        response.errorResponse(res,"You must login",401)
     }
 });
 

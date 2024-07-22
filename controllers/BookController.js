@@ -1,3 +1,4 @@
+const { type } = require("os");
 const Book = require("../models/BookModel")
 const response = require("../utils/response")
 const validate = require("../utils/validate")
@@ -39,6 +40,7 @@ exports.bookPost = async function (req, res) {
             year: req.body.year,
             pageNumber: req.body.pageNumber,
             isbnNumber: req.body.isbnNumber,
+            createdUser: req.auth.id
         })
 
         const exResult = await Book.exists({isbnNumber: book.isbnNumber})

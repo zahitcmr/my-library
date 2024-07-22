@@ -7,6 +7,7 @@ const BookSchema = new Schema({
     year: {type: Number},
     pageNumber: {type: Number},
     isbnNumber: {type: Number},
+    createdUser: {type: Schema.Types.ObjectId, ref: "User", required: true},
 }, {
     timestamps: true,
 });
