@@ -1,5 +1,6 @@
 const { type } = require("os");
 const Book = require("../models/BookModel")
+const BookHolder = require("../models/BookHolderModel")
 const response = require("../utils/response")
 const validate = require("../utils/validate")
 const {validationResult} = require('express-validator');
@@ -7,9 +8,10 @@ const {validationResult} = require('express-validator');
 exports.bookGetAll = async function (req, res) {
     console.log(req.auth);
     try {
-        const rows = await Book.find({user: req.auth.id})
+        const rows = await Book.find();
         return response.successResponse(res, rows)
-    } catch (e) {
+    }
+    catch (e) {
         return response.errorResponse(res, e.message, 500)
     }
 }
@@ -40,7 +42,7 @@ exports.bookPost = async function (req, res) {
             year: req.body.year,
             pageNumber: req.body.pageNumber,
             isbnNumber: req.body.isbnNumber,
-            createdUser: req.auth.id
+            createdBy: req.auth.id
         })
 
         const exResult = await Book.exists({isbnNumber: book.isbnNumber})
