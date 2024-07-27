@@ -27,7 +27,7 @@ exports.login = async function (req, res) {
             expiresIn: "24h",
         };
 
-        const token = jwt.sign(jwtPayload, "lahmacun", jwtData);
+        const token = jwt.sign(jwtPayload, process.env.JWT_SECRET, jwtData);
         return response.successResponse(res, token)
     } catch (e) {
         return response.errorResponse(res, e.message, 500)

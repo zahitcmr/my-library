@@ -1,6 +1,5 @@
 const { type } = require("os");
 const Book = require("../models/BookModel")
-const BookHolder = require("../models/BookHolderModel")
 const response = require("../utils/response")
 const validate = require("../utils/validate")
 const {validationResult} = require('express-validator');

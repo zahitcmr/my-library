@@ -2,7 +2,7 @@
  const secret = process.env.JWT_SECRET;
  
  const authenticate = jwt({
-     secret: secret || "lahmacun",
+     secret: secret || "secret",
      algorithms: ['HS256'],
  });
  

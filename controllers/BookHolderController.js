@@ -1,5 +1,5 @@
 const { type } = require("os");
-const BookHolder = require("../models/BookHolderModel")
+const BookHolder = require("../models/BookHolderModel.js")
 const Book = require("../models/BookModel")
 const response = require("../utils/response")
 const validate = require("../utils/validate")
@@ -43,8 +43,11 @@ exports.bookHolderPost = async function (req, res) {
             status: req.body.status
         })
 
-        const exResult = await BookHolder.exists({user: bookHolder.user})
-        if (exResult) return response.errorResponse(res, "This user already has a book!", 400)
+        let exResult;
+        if (bookHolder.status !== "Available") {
+            exResult = await BookHolder.exists({ user: bookHolder.user });
+            if (exResult) return response.errorResponse(res, "This user already has a book!", 400);
+        }
 
         const exIdResult = await BookHolder.exists({ bookId: bookHolder.bookId, status: "Not Available" });
         if (exIdResult) return response.errorResponse(res, "This book is already assigned to another user!", 400);
@@ -74,10 +77,13 @@ exports.bookHolderPut = async function (req, res) {
         bookHolder.returnedAt = req.body.returnedAt;
         bookHolder.status = req.body.status;
 
-        const exResult = await BookHolder.exists({
+        let exResult;
+        if (bookHolder.status !== "Available") {
+            exResult = await BookHolder.exists({
             $and: [{user: bookHolder.user}, {_id: {$ne: id}}]
-        });
-        if (exResult) return response.errorResponse(res, "This user already has a book!", 400);
+            });
+            if (exResult) return response.errorResponse(res, "This user already has a book!", 400);
+        }
 
         const exIdResult = await BookHolder.exists({
             $and: [{bookId: bookHolder.bookId, status: "Not Available"}, {_id: {$ne: id}}]

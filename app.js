@@ -3,9 +3,12 @@ const app = express();
 const routes = require("./routes/api")
 const mongoose = require('mongoose');
 const response = require("./utils/response");
+const dotenv = require('dotenv');
+
+dotenv.config({path: './.env.test'});
 app.use(express.json());
 
-mongoose.connect("mongodb://localhost:27017/my-library")
+mongoose.connect(process.env.MONGODB_URL)
     .then(() => {
         console.log("Connected to the database")
     })
@@ -21,7 +24,7 @@ app.use(function (err, req, res, next) {
     }
 });
 
-app.listen(5555, () => {
-    console.log(`App listening on port 5555`)
+app.listen(process.env.PORT, () => {
+    console.log(`App listening on port ${process.env.PORT}!`)
     console.log("Backend Started...")
 })
