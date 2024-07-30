@@ -3,11 +3,11 @@
   "version": "1.0.0",
   "main": "app.js",
   "scripts": {
-    "test": "echo \\\"Error: no test specified\\\" && exit 1"
+    "start": "node app.js"
   },
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/zahitcmr/my-library.git"
+    "url": "https://github.com/zahitcmr/my-library.git"
   },
   "author": "zahitcmr",
   "license": "ISC",
