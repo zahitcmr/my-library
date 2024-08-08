@@ -3,6 +3,7 @@ const Book = require("../models/BookModel")
 const response = require("../utils/response")
 const validate = require("../utils/validate")
 const {validationResult} = require('express-validator');
+const {getRedisClient} = require('../redis');
 
 exports.bookGetAll = async function (req, res) {
     console.log(req.auth);
@@ -21,10 +22,18 @@ exports.bookGet = async function (req, res) {
         const id = req.params.id;
         if (!validate.ValidateObjectId(id)) return response.errorResponse(res, "Id format is not correct", 400)
 
+        const bookFromRedis = await getRedisClient().get(id);
+        if (bookFromRedis) {
+            console.log(JSON.parse(bookFromRedis));
+            return response.successResponse(res, JSON.parse(bookFromRedis));
+        }
+
         const book = await Book.findById(id);
         if (!book) return response.errorResponse(res, "Book not found", 404)
 
-        return response.successResponse(res, book)
+        await getRedisClient().set(id, JSON.stringify(book));
+        return response.successResponse(res, book);
+
     } catch (e) {
         return response.errorResponse(res, e.message, 500)
     }
@@ -48,6 +57,9 @@ exports.bookPost = async function (req, res) {
         if (exResult) return response.errorResponse(res, "This ISBN number already exist!", 400)
 
         await Book.create(book)
+
+        await getRedisClient().set(book._id.toString(), JSON.stringify(book));
+
         return response.successResponse(res, book)
     } catch (e) {
         response.errorResponse(res, e.message, 500)
@@ -77,6 +89,9 @@ exports.bookPut = async function (req, res) {
         if (exResult) return response.errorResponse(res, "This ISBN number already exists!", 400);
 
         await Book.updateOne({_id: id}, book);
+
+        await getRedisClient().set(id, JSON.stringify(book));
+
         return response.successResponse(res, book);
     } catch (e) {
         response.errorResponse(res, e.message, 500);

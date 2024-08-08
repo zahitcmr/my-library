@@ -1,13 +1,23 @@
+const dotenv = require('dotenv');
+dotenv.config({ path: './.env.test' });
 const express = require('express');
 const app = express();
 const routes = require('./routes/api');
 const mongoose = require('mongoose');
 const response = require('./utils/response');
-const dotenv = require('dotenv');
+const {getRedisClient} = require('./redis');
 
-dotenv.config();
-console.log(process.env.MONGODB_URL);
 app.use(express.json());
+
+const Redis = getRedisClient();
+
+Redis.set('foo', 'bar').then(() => {
+        console.log('Redis client initialized');
+    }).catch((err) => {
+        console.error('Error initializing Redis:', err);
+    });
+
+
 
 mongoose.connect(process.env.MONGODB_URL)
     .then(() => {

@@ -22,5 +22,5 @@ exports.registerValidate = [
     body("email").trim().isLength({min: 2}).withMessage("Email should be minimum 2 characters").isEmail().withMessage("Please enter your email in the correct format"),
     body("password").trim().isLength({min: 6}).withMessage("Password should be minimum 6 characters"),
     body("firstname").trim().isLength({min: 2}).withMessage("First name should be minimum 2 characters"),
-    body("lastname").trim().isLength({min: 2}).withMessage("Last name should be minimum 2 characters"),
+    body("lastname").trim().isLength({min: 2}).withMessage("Last name should be minimum 2 characters")
 ]

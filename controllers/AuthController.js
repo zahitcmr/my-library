@@ -21,7 +21,8 @@ exports.login = async function (req, res) {
 
         const jwtPayload = {
             name: user.firstname + user.lastname,
-            id: user._id
+            id: user._id,
+            role: user.role
         }
         const jwtData = {
             expiresIn: "24h",
@@ -40,7 +41,7 @@ exports.register = async function (req, res) {
         if (!errors.isEmpty()) return response.errorResponse(res, errors.array().map(d => d.msg).join("<br>"), 400);
 
         const exResult = await User.exists({email: req.body.email})
-        if (exResult) return response.errorResponse(res, "This email already exist!", 400)
+        if (exResult) return response.errorResponse(res, "This email already exists!", 400)
 
         const user = new User({
             firstname: req.body.firstname,
